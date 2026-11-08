@@ -2,8 +2,8 @@
 <!-- Ícones: coolicons (https://coolicons.cool), pacote npm @coolicons/svg
      © 2026 Kryston Schwarze — Licença MIT (https://github.com/krystonschwarze/coolicons) -->
 <html lang="pt-BR"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Organizador de Referências</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Quadro – clone do Milanote</title>
 <style>
 :root{--bg:#f3f3f1;--dot:#d2d2cd;--pn:#fff;--tx:#222;--mu:#888;--bd:#e4e4e0;--cd:#fff;--ac:#e5484d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1c1c1e;--dot:#333336;--pn:#2a2a2c;--tx:#eee;--mu:#999;--bd:#3a3a3c;--cd:#2c2c2e}}
@@ -84,6 +84,22 @@ main{position:relative;overflow:hidden}
 .pa{flex:0 0 34px;height:70px;border:1px dashed var(--mu);background:transparent;color:var(--mu);border-radius:5px;cursor:pointer}.pa:hover{color:var(--ac);border-color:var(--ac)}.pa svg{width:18px;height:18px}
 #tp{position:fixed;display:none;background:var(--pn);color:var(--tx);border-radius:10px;padding:10px;box-shadow:0 6px 24px #0004;z-index:80;user-select:none}#tp.on{display:block}
 .tg{display:grid;grid-template-columns:repeat(10,20px);gap:3px}.tg i{width:20px;height:20px;border:1px solid var(--bd);border-radius:3px;background:var(--bg);cursor:pointer}.tg i.h{background:var(--ac);border-color:var(--ac)}#tp small{display:block;text-align:center;margin-top:8px;color:var(--mu)}
+html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+@supports(height:100dvh){html{height:100dvh}}
+#mn{max-height:calc(100% - 150px);overflow-y:auto}#mn .mo{display:none}
+@media(max-width:760px){
+ #top{gap:6px;padding:0 8px}#bn{width:120px}.sp{display:none!important}#ex,#im{display:none}#mn .mo{display:flex}
+ #bar{left:0;right:0;top:auto;bottom:0;transform:none;max-height:none;flex-direction:row;overflow-x:auto;overflow-y:hidden;border-radius:16px 16px 0 0;padding:6px 8px;gap:2px;box-shadow:0 -2px 14px #0002;touch-action:pan-x}
+ #bar button{touch-action:pan-x;width:58px;flex:0 0 58px}.tsep{width:1px;height:auto;margin:6px 4px;align-self:stretch}
+ #zm{bottom:80px;right:8px}#pens{bottom:80px}#toast{bottom:136px}#cr2{bottom:auto;top:6px;right:8px;font-size:10px}
+}
+@media(pointer:coarse){
+ .grip{height:26px}.card:not(.draw):not(.title){padding-top:28px}.rs{width:24px;height:24px;right:-10px;bottom:-10px}
+ .ft{padding:6px 8px;gap:8px}.ft svg{width:20px;height:20px}.swc{width:24px;height:24px}.ft b{padding:4px 6px}
+ #ln .hit{stroke-width:30}#mn button{padding:11px 18px 11px 12px}.tg{grid-template-columns:repeat(10,26px)}.tg i{width:26px;height:26px}
+ .ghost{transform:translate(-50%,-170%)}#zm button{width:38px;height:38px}#pens i{width:26px;height:26px}
+}
+@media(hover:none){.rm{display:flex}}
 </style></head><body>
 <div id="app">
 <div id="top"><b class="logo">◆</b><nav id="cr"></nav><input id="bn" aria-label="Nome do board"><button class="tb" id="db" title="Excluir board atual"><i data-i="trash"></i></button><span class="sp"></span><button class="tb" id="ex">Exportar</button><button class="tb" id="im">Importar</button>
@@ -93,7 +109,7 @@ main{position:relative;overflow:hidden}
 <div id="bar">
 <button data-t="title" class="hl"><i data-i="heading"></i>Título</button><div class="tsep"></div><button data-t="note"><i data-i="note"></i>Notas</button><button data-t="link"><i data-i="link"></i>Link</button><button data-t="todo"><i data-i="checkbox-checked"></i>To-do</button><button data-t="line"><i data-i="arrow-up-right"></i>Linha</button><button data-t="board"><i data-i="folder"></i>Board</button><button data-t="more"><i data-i="more-horizontal"></i>Mais</button><button data-t="draw"><i data-i="pencil"></i>Desenhar</button><div class="tsep"></div><button data-t="trash" id="tr"><i data-i="trash"></i>Lixeira</button>
 </div>
-<div id="mn"><button data-t="color"><i data-i="palette"></i>Color</button><button data-t="doc"><i data-i="file-text"></i>Documentos</button><button data-t="table"><i data-i="table"></i>Tabela</button><button data-t="col"><i data-i="columns"></i>Coluna</button><button data-t="img"><i data-i="image"></i>Imagem</button></div>
+<div id="mn"><button data-t="color"><i data-i="palette"></i>Color</button><button data-t="doc"><i data-i="file-text"></i>Documentos</button><button data-t="table"><i data-i="table"></i>Tabela</button><button data-t="col"><i data-i="columns"></i>Coluna</button><button data-t="img"><i data-i="image"></i>Imagem</button><button class="mo" id="ex2"><i data-i="download"></i>Exportar</button><button class="mo" id="im2"><i data-i="upload"></i>Importar</button></div>
 <div id="pens"></div>
 <div id="tp"></div>
 <div id="zm"><button id="un" title="Desfazer"><i data-i="undo"></i></button><button id="re" title="Refazer"><i data-i="redo"></i></button><button id="zo"><i data-i="minus"></i></button><span id="zl">100%</span><button id="zi"><i data-i="plus"></i></button><button id="zf" title="Centralizar"><i data-i="target"></i></button></div>
@@ -108,12 +124,12 @@ const PAL=['#e5484d','#f5a623','#fff7a8','#2fb344','#2b7fff'];
 const DEF={note:{w:200,c:'#fff7a8'},text:{w:240},todo:{w:240,items:[{d:0,x:''}]},link:{w:250},img:{w:240},col:{w:290,h:380,c:'#ececec'},board:{w:200},doc:{w:260},table:{w:320,rows:[['']]},color:{w:200,cols:[PAL[0]]},title:{w:420}};
 const PH={note:'Escreva uma nota…',text:'Digite um texto…',title:'Título'};
 /* Ícones: coolicons (@coolicons/svg), © 2026 Kryston Schwarze, MIT – https://coolicons.cool */
-const IC={"note":"<path d=\"M13 20H6C4.89543 20 4 19.10457 4 18V6C4 4.89543 4.89543 4 6 4H18C19.10457 4 20 4.89543 20 6V13M20 13L13 20M13 20V15C13 13.89543 13.89543 13 15 13H20\"/>","link":"<path d=\"M7 11L5 13C3.34315 14.65685 3.34315 17.34315 5 19C6.65685 20.65685 9.34315 20.65685 11 19L13 17M17 13L19 11C20.65685 9.34315 20.65685 6.65685 19 5C17.34315 3.34315 14.65685 3.34315 13 5L11 7M8 16L16 8\"/>","checkbox-checked":"<path d=\"M4 6C4 4.89543 4.89543 4 6 4H18C19.10457 4 20 4.89543 20 6V18C20 19.10457 19.10457 20 18 20H6C4.89543 20 4 19.10457 4 18ZM9 12L11 14L15 10\"/>","arrow-up-right":"<path d=\"M10 7H17V14M17 7L7 17\"/>","folder":"<path d=\"M12 6H19C20.10457 6 21 6.89543 21 8V18C21 19.10457 20.10457 20 19 20H5C3.89543 20 3 19.10457 3 18V6C3 4.89543 3.89543 4 5 4H10L12 6\"/>","more-horizontal":"<path d=\"M5 12C5 12.55228 5.44772 13 6 13C6.55228 13 7 12.55228 7 12C7 11.44772 6.55228 11 6 11C5.44772 11 5 11.44772 5 12ZM11 12C11 12.55228 11.44772 13 12 13C12.55228 13 13 12.55228 13 12C13 11.44772 12.55228 11 12 11C11.44772 11 11 11.44772 11 12ZM17 12C17 12.55228 17.44772 13 18 13C18.55228 13 19 12.55228 19 12C19 11.44772 18.55228 11 18 11C17.44772 11 17 11.44772 17 12Z\"/>","image":"<path d=\"M3 5C3 3.89543 3.89543 3 5 3H19C20.10457 3 21 3.89543 21 5V19C21 20.10457 20.10457 21 19 21H5C3.89543 21 3 20.10457 3 19ZM3 17L8 12C8.55228 11.44772 9.44772 11.44772 10 12L13 15C13.55228 15.55228 14.44772 15.55228 15 15L16 14C16.55228 13.44772 17.44772 13.44772 18 14L21 17M14 8C14 8.55228 14.44772 9 15 9C15.55228 9 16 8.55228 16 8C16 7.44772 15.55228 7 15 7C14.44772 7 14 7.44772 14 8Z\"/>","pencil":"<path d=\"M4 16L15 5C15.55228 4.44772 16.44772 4.44772 17 5L19 7C19.55228 7.55228 19.55228 8.44772 19 9L8 20M12 8L16 12M8 20H4V16\"/>","trash":"<path d=\"M6 6V19C6 20.10457 6.89543 21 8 21H16C17.10457 21 18 20.10457 18 19V6M4 6H20M8 6V5C8 3.89543 8.89543 3 10 3H14C15.10457 3 16 3.89543 16 5V6\"/>","palette":"<path d=\"M12 21C7.02944 21 3 16.97056 3 12C3 7.02944 7.02944 3 12 3C16.97056 3 21 7.02944 21 12C21 14.20914 19.20914 16 17 16H15C13.89543 16 13 16.89543 13 18V20C13 20.55228 12.55228 21 12 21ZM7 12H7.01M9 8H9.01M14 7H14.01M17 11H17.01\"/>","file-text":"<path d=\"M13 3H7C5.89543 3 5 3.89543 5 5V19C5 20.10457 5.89543 21 7 21H17C18.10457 21 19 20.10457 19 19V9M13 3L19 9M13 3V7C13 8.10457 13.89543 9 15 9H19M9 13H15M9 17H15\"/>","table":"<path d=\"M4 6C4 4.89543 4.89543 4 6 4H18C19.10457 4 20 4.89543 20 6V18C20 19.10457 19.10457 20 18 20H6C4.89543 20 4 19.10457 4 18ZM4 9H20M4 15H20M12 4V20\"/>","columns":"<path d=\"M4 6C4 4.89543 4.89543 4 6 4H8C9.10457 4 10 4.89543 10 6V18C10 19.10457 9.10457 20 8 20H6C4.89543 20 4 19.10457 4 18ZM14 6C14 4.89543 14.89543 4 16 4H18C19.10457 4 20 4.89543 20 6V18C20 19.10457 19.10457 20 18 20H16C14.89543 20 14 19.10457 14 18Z\"/>","copy":"<path d=\"M3 9C3 7.89543 3.89543 7 5 7H15C16.10457 7 17 7.89543 17 9V19C17 20.10457 16.10457 21 15 21H5C3.89543 21 3 20.10457 3 19ZM7 3H19C20.10457 3 21 3.89543 21 5V17\"/>","external-link":"<path d=\"M10 5H7C5.89543 5 5 5.89543 5 7V17C5 18.10457 5.89543 19 7 19H17C18.10457 19 19 18.10457 19 17V14M15 4H20V9M20 4L13 11\"/>","undo":"<path d=\"M5 15C5.77033 16.79744 7.20256 18.22967 9 19C10.91574 19.82103 13.08426 19.82103 15 19C16.79744 18.22967 18.22967 16.79744 19 15C19.82103 13.08426 19.82103 10.91574 19 9C18.22967 7.20256 16.79744 5.77033 15 5C13.08426 4.17897 10.91574 4.17897 9 5C7.20256 5.77033 5.77033 7.20256 5 9M11 9H5V3\"/>","redo":"<path d=\"M19 15C18.22967 16.79744 16.79744 18.22967 15 19C13.08426 19.82103 10.91574 19.82103 9 19C7.20256 18.22967 5.77033 16.79744 5 15C4.17897 13.08426 4.17897 10.91574 5 9C5.77033 7.20256 7.20256 5.77033 9 5C10.91574 4.17897 13.08426 4.17897 15 5C16.79744 5.77033 18.22967 7.20256 19 9M13 9H19V3\"/>","plus":"<path d=\"M6 12H18M12 6V18\"/>","minus":"<path d=\"M6 12H18\"/>","target":"<path d=\"M3 12C3 16.97056 7.02944 21 12 21C16.97056 21 21 16.97056 21 12C21 7.02944 16.97056 3 12 3C7.02944 3 3 7.02944 3 12ZM7 12C7 9.23858 9.23858 7 12 7C14.76142 7 17 9.23858 17 12M17 12C17 14.76142 14.76142 17 12 17C9.23858 17 7 14.76142 7 12M12 12H12.01\"/>","sun":"<path d=\"M9 12C9 13.65685 10.34315 15 12 15C13.65685 15 15 13.65685 15 12C15 10.34315 13.65685 9 12 9C10.34315 9 9 10.34315 9 12ZM19 12L21 12M16.94975 16.94975L18.36396 18.36396M12 19L12 21M7.05025 16.94975L5.63604 18.36396M5 12L3 12M7.05025 7.05025L5.63604 5.63604M12 5L12 3M16.94975 7.05025L18.36396 5.63604\"/>","moon":"<path d=\"M21 12C21 16.97056 16.97056 21 12 21C7.02944 21 3 16.97056 3 12C3 7.02944 7.02944 3 12 3C9.23858 5.20914 8.79086 9.23858 11 12C11.29539 12.36923 11.63077 12.70461 12 13C14.76142 15.20914 18.79086 14.76142 21 12Z\"/>","heading":"<path d=\"M7 5V19M17 5V19M7 12H17\"/>","close":"<path d=\"M6 6L18 18M18 6L6 18\"/>"};
+const IC={"note":"<path d=\"M13 20H6C4.89543 20 4 19.10457 4 18V6C4 4.89543 4.89543 4 6 4H18C19.10457 4 20 4.89543 20 6V13M20 13L13 20M13 20V15C13 13.89543 13.89543 13 15 13H20\"/>","link":"<path d=\"M7 11L5 13C3.34315 14.65685 3.34315 17.34315 5 19C6.65685 20.65685 9.34315 20.65685 11 19L13 17M17 13L19 11C20.65685 9.34315 20.65685 6.65685 19 5C17.34315 3.34315 14.65685 3.34315 13 5L11 7M8 16L16 8\"/>","checkbox-checked":"<path d=\"M4 6C4 4.89543 4.89543 4 6 4H18C19.10457 4 20 4.89543 20 6V18C20 19.10457 19.10457 20 18 20H6C4.89543 20 4 19.10457 4 18ZM9 12L11 14L15 10\"/>","arrow-up-right":"<path d=\"M10 7H17V14M17 7L7 17\"/>","folder":"<path d=\"M12 6H19C20.10457 6 21 6.89543 21 8V18C21 19.10457 20.10457 20 19 20H5C3.89543 20 3 19.10457 3 18V6C3 4.89543 3.89543 4 5 4H10L12 6\"/>","more-horizontal":"<path d=\"M5 12C5 12.55228 5.44772 13 6 13C6.55228 13 7 12.55228 7 12C7 11.44772 6.55228 11 6 11C5.44772 11 5 11.44772 5 12ZM11 12C11 12.55228 11.44772 13 12 13C12.55228 13 13 12.55228 13 12C13 11.44772 12.55228 11 12 11C11.44772 11 11 11.44772 11 12ZM17 12C17 12.55228 17.44772 13 18 13C18.55228 13 19 12.55228 19 12C19 11.44772 18.55228 11 18 11C17.44772 11 17 11.44772 17 12Z\"/>","image":"<path d=\"M3 5C3 3.89543 3.89543 3 5 3H19C20.10457 3 21 3.89543 21 5V19C21 20.10457 20.10457 21 19 21H5C3.89543 21 3 20.10457 3 19ZM3 17L8 12C8.55228 11.44772 9.44772 11.44772 10 12L13 15C13.55228 15.55228 14.44772 15.55228 15 15L16 14C16.55228 13.44772 17.44772 13.44772 18 14L21 17M14 8C14 8.55228 14.44772 9 15 9C15.55228 9 16 8.55228 16 8C16 7.44772 15.55228 7 15 7C14.44772 7 14 7.44772 14 8Z\"/>","pencil":"<path d=\"M4 16L15 5C15.55228 4.44772 16.44772 4.44772 17 5L19 7C19.55228 7.55228 19.55228 8.44772 19 9L8 20M12 8L16 12M8 20H4V16\"/>","trash":"<path d=\"M6 6V19C6 20.10457 6.89543 21 8 21H16C17.10457 21 18 20.10457 18 19V6M4 6H20M8 6V5C8 3.89543 8.89543 3 10 3H14C15.10457 3 16 3.89543 16 5V6\"/>","palette":"<path d=\"M12 21C7.02944 21 3 16.97056 3 12C3 7.02944 7.02944 3 12 3C16.97056 3 21 7.02944 21 12C21 14.20914 19.20914 16 17 16H15C13.89543 16 13 16.89543 13 18V20C13 20.55228 12.55228 21 12 21ZM7 12H7.01M9 8H9.01M14 7H14.01M17 11H17.01\"/>","file-text":"<path d=\"M13 3H7C5.89543 3 5 3.89543 5 5V19C5 20.10457 5.89543 21 7 21H17C18.10457 21 19 20.10457 19 19V9M13 3L19 9M13 3V7C13 8.10457 13.89543 9 15 9H19M9 13H15M9 17H15\"/>","table":"<path d=\"M4 6C4 4.89543 4.89543 4 6 4H18C19.10457 4 20 4.89543 20 6V18C20 19.10457 19.10457 20 18 20H6C4.89543 20 4 19.10457 4 18ZM4 9H20M4 15H20M12 4V20\"/>","columns":"<path d=\"M4 6C4 4.89543 4.89543 4 6 4H8C9.10457 4 10 4.89543 10 6V18C10 19.10457 9.10457 20 8 20H6C4.89543 20 4 19.10457 4 18ZM14 6C14 4.89543 14.89543 4 16 4H18C19.10457 4 20 4.89543 20 6V18C20 19.10457 19.10457 20 18 20H16C14.89543 20 14 19.10457 14 18Z\"/>","copy":"<path d=\"M3 9C3 7.89543 3.89543 7 5 7H15C16.10457 7 17 7.89543 17 9V19C17 20.10457 16.10457 21 15 21H5C3.89543 21 3 20.10457 3 19ZM7 3H19C20.10457 3 21 3.89543 21 5V17\"/>","external-link":"<path d=\"M10 5H7C5.89543 5 5 5.89543 5 7V17C5 18.10457 5.89543 19 7 19H17C18.10457 19 19 18.10457 19 17V14M15 4H20V9M20 4L13 11\"/>","undo":"<path d=\"M5 15C5.77033 16.79744 7.20256 18.22967 9 19C10.91574 19.82103 13.08426 19.82103 15 19C16.79744 18.22967 18.22967 16.79744 19 15C19.82103 13.08426 19.82103 10.91574 19 9C18.22967 7.20256 16.79744 5.77033 15 5C13.08426 4.17897 10.91574 4.17897 9 5C7.20256 5.77033 5.77033 7.20256 5 9M11 9H5V3\"/>","redo":"<path d=\"M19 15C18.22967 16.79744 16.79744 18.22967 15 19C13.08426 19.82103 10.91574 19.82103 9 19C7.20256 18.22967 5.77033 16.79744 5 15C4.17897 13.08426 4.17897 10.91574 5 9C5.77033 7.20256 7.20256 5.77033 9 5C10.91574 4.17897 13.08426 4.17897 15 5C16.79744 5.77033 18.22967 7.20256 19 9M13 9H19V3\"/>","plus":"<path d=\"M6 12H18M12 6V18\"/>","minus":"<path d=\"M6 12H18\"/>","target":"<path d=\"M3 12C3 16.97056 7.02944 21 12 21C16.97056 21 21 16.97056 21 12C21 7.02944 16.97056 3 12 3C7.02944 3 3 7.02944 3 12ZM7 12C7 9.23858 9.23858 7 12 7C14.76142 7 17 9.23858 17 12M17 12C17 14.76142 14.76142 17 12 17C9.23858 17 7 14.76142 7 12M12 12H12.01\"/>","sun":"<path d=\"M9 12C9 13.65685 10.34315 15 12 15C13.65685 15 15 13.65685 15 12C15 10.34315 13.65685 9 12 9C10.34315 9 9 10.34315 9 12ZM19 12L21 12M16.94975 16.94975L18.36396 18.36396M12 19L12 21M7.05025 16.94975L5.63604 18.36396M5 12L3 12M7.05025 7.05025L5.63604 5.63604M12 5L12 3M16.94975 7.05025L18.36396 5.63604\"/>","moon":"<path d=\"M21 12C21 16.97056 16.97056 21 12 21C7.02944 21 3 16.97056 3 12C3 7.02944 7.02944 3 12 3C9.23858 5.20914 8.79086 9.23858 11 12C11.29539 12.36923 11.63077 12.70461 12 13C14.76142 15.20914 18.79086 14.76142 21 12Z\"/>","heading":"<path d=\"M7 5V19M17 5V19M7 12H17\"/>","close":"<path d=\"M6 6L18 18M18 6L6 18\"/>","download":"<path d=\"M8 12L12 16L16 12M12 16V4M6 20H18\"/>","upload":"<path d=\"M16 8L12 4L8 8M12 4V16M6 20H18\"/>"};
 const ic=(n,c="")=>`<svg class="ic ${c}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
 const esc=s=>(s??'').toString().replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 const NS='http://www.w3.org/2000/svg',fmt=n=>n>1e6?(n/1e6).toFixed(1)+' MB':Math.round(n/1e3)+' KB';
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-let S,hist=[],fut=[],prev,sel=null,selL=null,mode=null,from=null,G=null,Z=0,T,V={x:80,y:20,z:1},pend=null,pen=null,strokes=[],TA={};
+let S,hist=[],fut=[],prev,sel=null,selL=null,mode=null,from=null,G=null,Z=0,T,V={x:80,y:20,z:1},pend=null,pen=null,strokes=[],TA={},LT={};
 try{S=JSON.parse(localStorage.getItem('mb'))}catch(e){}
 if(!S||!S.boards)S={boards:[{id:'b0',r:1,name:'Meu primeiro board',cards:[
 {id:'a1',t:'text',x:60,y:40,w:380,z:1,txt:'Bem-vindo ao seu quadro ✨'},
@@ -192,7 +208,10 @@ document.addEventListener('pointerdown',e=>{
  if(!e.target.closest('#mn')&&!(b&&b.dataset.t=='more'))$('#mn').classList.remove('on');
  if(!b)return;const t=b.dataset.t;
  if(t=='line'||t=='draw'){setMode(mode==t?null:t);return}
- if(t=='more'){const r=b.getBoundingClientRect(),m=$('#mn');m.style.left=r.right+8+'px';m.style.top=Math.min(r.top,innerHeight-240)+'px';m.classList.toggle('on');return}
+ if(t=='more'){const r=b.getBoundingClientRect(),m=$('#mn');
+  if(matchMedia('(max-width:760px)').matches){m.style.top='auto';m.style.bottom=innerHeight-r.top+8+'px';m.style.left=Math.max(8,Math.min(r.left,innerWidth-200))+'px'}
+  else{m.style.bottom='auto';m.style.left=r.right+8+'px';m.style.top=Math.min(r.top,innerHeight-300)+'px'}
+  m.classList.toggle('on');return}
  if(t=='trash'){if(sel!=null||selL!==null)del();else toast('Arraste um card até a lixeira');return}
  setMode(null);const sx=e.clientX,sy=e.clientY;let gh=null;
  G={m:e=>{if(!gh&&Math.hypot(e.clientX-sx,e.clientY-sy)>6){gh=document.createElement('div');gh.className='ghost';gh.textContent=b.innerText.replace('\n',' ');document.body.append(gh)}
@@ -212,15 +231,21 @@ $('#db').onclick=()=>{const b=B(),n=S.path.length,subs=nb(b.id);
 $('#ex').onclick=()=>{const j=JSON.stringify(S);try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='quadro-backup.json';a.click()}catch(e){}
  (navigator.clipboard?navigator.clipboard.writeText(j):Promise.reject()).then(()=>toast('Backup copiado para a área de transferência'),()=>toast('Backup gerado'))};
 $('#im').onclick=()=>$('#fj').click();
+$('#ex2').onclick=()=>{$('#mn').classList.remove('on');$('#ex').click()};$('#im2').onclick=()=>{$('#mn').classList.remove('on');$('#fj').click()};
 $('#fj').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);if(!d.boards)throw 0;S=d;delete S.path;norm();V={x:80,y:20,z:1};apply();sel=null;render();commit();persist();toast('Importado!')}catch(x){toast('Arquivo inválido')}});e.target.value=''};
 function attach(c,f){if(f.size>2.5e6)return toast('Arquivo grande demais (máx. 2,5 MB). Use "Colar link".');const r=new FileReader();r.onload=()=>{c.src=r.result;c.fname=f.name;c.size=f.size;c.ext=(f.name.split('.').pop()||'').toUpperCase();c.title=c.title||f.name.replace(/\.[^.]+$/,'');rer(c);commit()};r.readAsDataURL(f)}
 async function openDoc(c){if(c.url){window.open(c.url,'_blank','noopener');return}try{const u=URL.createObjectURL(await (await fetch(c.src)).blob());if(!window.open(u,'_blank')){const a=document.createElement('a');a.href=u;a.download=c.fname;a.click()}}catch(e){toast('Não foi possível abrir o arquivo')}}
 $('#fd').onchange=e=>{const f=e.target.files[0];if(f&&pend)attach(pend,f);e.target.value=''};
 const TG=$('#tp');let tcb=null;
 TG.innerHTML='<div class=tg>'+Array.from({length:80},(_,n)=>`<i data-r=${Math.floor(n/10)+1} data-k=${n%10+1}></i>`).join('')+'</div><small>Selecione o tamanho</small>';
-TG.onpointerover=e=>{const i=e.target.closest('i');if(!i)return;const r=+i.dataset.r,k=+i.dataset.k;TG.querySelectorAll('i').forEach(x=>x.classList.toggle('h',+x.dataset.r<=r&&+x.dataset.k<=k));TG.querySelector('small').textContent=r+' linhas × '+k+' colunas'};
-TG.onclick=e=>{const i=e.target.closest('i');if(!i||!tcb)return;const cb=tcb;tcb=null;TG.classList.remove('on');cb(+i.dataset.r,+i.dataset.k)};
-function pickTable(x,y,cb){tcb=cb;TG.style.left=Math.max(8,Math.min(x,innerWidth-250))+'px';TG.style.top=Math.max(8,Math.min(y,innerHeight-240))+'px';TG.classList.add('on');TG.querySelectorAll('i').forEach(i=>i.classList.remove('h'));TG.querySelector('small').textContent='Selecione o tamanho'}
+const hlT=i=>{TG.querySelectorAll('i').forEach(x=>x.classList.toggle('h',!!i&&+x.dataset.r<=+i.dataset.r&&+x.dataset.k<=+i.dataset.k));TG.querySelector('small').textContent=i?i.dataset.r+' linhas × '+i.dataset.k+' colunas':'Selecione o tamanho'};
+const pickT=i=>{if(!i||!tcb)return;const cb=tcb;tcb=null;TG.classList.remove('on');cb(+i.dataset.r,+i.dataset.k)};
+const cellAt=e=>{const o=document.elementFromPoint(e.clientX,e.clientY);return o&&o.closest('#tp i')};
+TG.onpointerover=e=>hlT(e.target.closest('i'));
+TG.onpointermove=e=>{if(e.pointerType=='touch')hlT(cellAt(e))};
+TG.onpointerup=e=>{if(e.pointerType=='touch')pickT(cellAt(e))};
+TG.onclick=e=>pickT(e.target.closest('i'));
+function pickTable(x,y,cb){tcb=cb;TG.classList.add('on');TG.style.left=Math.max(8,Math.min(x-20,innerWidth-TG.offsetWidth-8))+'px';TG.style.top=Math.max(8,Math.min(y-20,innerHeight-TG.offsetHeight-8))+'px';hlT(null)}
 function make(t,x,y,e){if(t=='table')pickTable(e.clientX,e.clientY,(r,k)=>add('table',x,y,{w:Math.min(720,Math.max(200,k*90)),rows:Array.from({length:r},()=>Array(k).fill(''))}));else add(t,x,y)}
 $('#fi').onchange=e=>{const f=e.target.files[0];if(f&&pend){const c=pend;shrink(f,s=>{c.src=s;rer(c);commit()})}e.target.value=''};
 /* tema */
@@ -258,9 +283,12 @@ W.addEventListener('click',e=>{const d=e.target.closest('.card');if(!d)return;co
  else if(a=='updoc'){pend=c;$('#fd').click()}
  else if(a=='urldoc'){let u=prompt('Cole o link do documento (Google Docs, Drive, PDF…):');if(u){u=u.trim();if(!/^https?:\/\//i.test(u))u='https://'+u;c.url=u;c.fname=u.replace(/^https?:\/\//,'').slice(0,50);c.ext='Link';R()}}
  else if(a=='opendoc')openDoc(c)});
-W.addEventListener('dblclick',e=>{const d=e.target.closest('.card.board');if(d&&!e.target.closest('input'))go([...S.path,gc(d.dataset.id).ref])});
 /* ponteiro no canvas */
 const pos=(x,y)=>{const r=cv.getBoundingClientRect();return[(x-r.left-V.x)/V.z,(y-r.top-V.y)/V.z]};
+const PT=new Map();
+cv.addEventListener('pointerdown',e=>{if(e.pointerType!='touch')return;PT.set(e.pointerId,[e.clientX,e.clientY]);if(PT.size!=2)return;e.stopImmediatePropagation();
+ const g=G;G=null;if(g&&g.u)g.u(e);const gp=()=>{const[a,b]=[...PT.values()];return[Math.hypot(a[0]-b[0],a[1]-b[1])||1,(a[0]+b[0])/2,(a[1]+b[1])/2]};let[d0,x0,y0]=gp();
+ G={m:()=>{if(PT.size<2)return;const[d,x,y]=gp();V.x+=x-x0;V.y+=y-y0;zoom(d/d0,x,y);d0=d;x0=x;y0=y}}},true);
 cv.onpointerdown=e=>{const t=e.target,cd=t.closest('.card'),hp=t.closest('path[data-i]');
  if(mode=='draw'){if(document.activeElement)document.activeElement.blur();const q0=pos(e.clientX,e.clientY),pts=[q0,[q0[0]+.1,q0[1]]],p=document.createElementNS(NS,'path');
   [['fill','none'],['stroke',pen||'currentColor'],['stroke-width',3],['stroke-linecap','round'],['stroke-linejoin','round'],['d',pd(pts)]].forEach(a=>p.setAttribute(...a));DR.append(p);strokes.push({pts,col:pen,el:p});
@@ -275,6 +303,7 @@ cv.onpointerdown=e=>{const t=e.target,cd=t.closest('.card'),hp=t.closest('path[d
  if(hp){selL=+hp.dataset.i;select(null,true);return}
  if(!cd){if(document.activeElement)document.activeElement.blur();getSelection().removeAllRanges();select(null);const sx=e.clientX,sy=e.clientY,ox=V.x,oy=V.y;G={m:e=>{V.x=ox+e.clientX-sx;V.y=oy+e.clientY-sy;apply()}};return}
  const c=gc(cd.dataset.id);if(sel!=c.id)select(c.id);if(c.t!='col'){c.z=++Z;cd.style.zIndex=2+c.z}
+ if(c.t=='board'&&!t.closest('input,button')){const n=Date.now();if(LT.id==c.id&&n-LT.t<400){LT={};go([...S.path,c.ref]);return}LT={id:c.id,t:n}}
  const sx=e.clientX,sy=e.clientY;
  if(t.closest('.rs')){const ow=c.w,oh=c.h,mn=c.t=='draw'?20:120;G={m:e=>{c.w=Math.max(mn,Math.round(ow+(e.clientX-sx)/V.z));cd.style.width=c.w+'px';if(c.h!=null){c.h=Math.max(mn,Math.round(oh+(e.clientY-sy)/V.z));cd.style.height=c.h+'px'}drawLines()},u:commit}}
  else if(t.closest('.grip')||!t.closest('input,[contenteditable],button,a,.swc,b,label')){
@@ -283,8 +312,9 @@ cv.onpointerdown=e=>{const t=e.target,cd=t.closest('.card'),hp=t.closest('path[d
   G={m:e=>{const dx=(e.clientX-sx)/V.z,dy=(e.clientY-sy)/V.z;it.forEach(([k,x,y])=>{k.x=Math.round(x+dx);k.y=Math.round(y+dy);const el=ge(k.id);el.style.left=k.x+'px';el.style.top=k.y+'px'});drawLines();
    const r=tr.getBoundingClientRect();hot=e.clientX>r.left&&e.clientX<r.right&&e.clientY>r.top&&e.clientY<r.bottom;tr.classList.toggle('hot',hot)},
    u:()=>{tr.classList.remove('hot');if(hot){it.forEach(([k,x,y])=>{if(k!=c){k.x=x;k.y=y}});sel=c.id;selL=null;del();toast('Movido para a lixeira (Ctrl+Z desfaz)')}else commit()}}}};
-addEventListener('pointermove',e=>G&&G.m(e));
-addEventListener('pointerup',e=>{if(G){const g=G;G=null;g.u&&g.u(e)}});
+addEventListener('pointermove',e=>{if(PT.has(e.pointerId))PT.set(e.pointerId,[e.clientX,e.clientY]);G&&G.m(e)});
+addEventListener('pointerup',e=>{PT.delete(e.pointerId);if(G){const g=G;G=null;g.u&&g.u(e)}});
+addEventListener('pointercancel',e=>{PT.delete(e.pointerId);G=null;commit();document.querySelectorAll('.ghost').forEach(x=>x.remove());DR.querySelectorAll('line').forEach(x=>x.remove());$('#tr').classList.remove('hot')});
 cv.onwheel=e=>{e.preventDefault();if(e.ctrlKey||e.metaKey)zoom(e.deltaY<0?1.1:1/1.1,e.clientX,e.clientY);else{V.x-=e.deltaX;V.y-=e.deltaY;apply()}};
 cv.addEventListener('mousedown',e=>{if(mode||!e.target.closest('input,[contenteditable],a'))e.preventDefault()});
 cv.ondragover=e=>e.preventDefault();
